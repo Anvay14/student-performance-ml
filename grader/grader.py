@@ -24,8 +24,15 @@ print(f"✅ Loaded answer key: {len(truth_df)} rows, columns: {truth_df.columns.
 
 # 3. Find student submission
 sub_files = glob.glob("submission/*.csv")
+if not sub_files:
+    print("❌ Error: No CSV file found in the submission folder.")
+    exit(1)
+
+sub_df = pd.read_csv(sub_files[0], sep=None, engine='python')  # ← read FIRST
+sub_df.columns = sub_df.columns.str.strip()
+
 # If no 'id' column, create one from row index
-if 'id' not in sub_df.columns:
+if 'id' not in sub_df.columns:                                  # ← check AFTER
     sub_df['id'] = range(1, len(sub_df) + 1)
 sub_df['id'] = sub_df['id'].astype(int)
 
